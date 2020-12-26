@@ -5,6 +5,7 @@
 #include <vector>
 #include <unordered_set>
 #include <string_view>
+#include <ostream>
 
 namespace gvl {
 
@@ -109,12 +110,12 @@ class Graph {
 
   /*!
    * Write graph to file in DOT language format.
-   * @param fp Pointer to the file to write
+   * @param out output stream to write
    */
-  void RenderDot(FILE* fp) const;
+  void RenderDot(std::ostream & out) const;
 
  private:
-  void PrintCommonProperties(FILE* fp) const;
+  void PrintCommonProperties(std::ostream & out) const;
 
  private:
   std::vector<Node> nodes_;

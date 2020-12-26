@@ -1,7 +1,8 @@
 #include "gvl.h"
+#include <fstream>
 
 int main() {
-  FILE * out = fopen("out.gv", "w");
+  std::ofstream out("out.gv");
   gvl::Graph g("G");
   g.AddGraphProperty("rankdir", "RL");
   g.AddCommonNodeProperty("shape", "box");

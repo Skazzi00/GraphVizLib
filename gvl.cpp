@@ -1,75 +1,68 @@
 #include <cstdio>
+#include <ostream>
 
 #include "gvl.h"
 
 namespace gvl {
 
-void PrintNodeId(FILE* fp, const NodeId& node_id) {
-  fprintf(fp, "%s", node_id.name.data());
+std::ostream& operator<<(std::ostream& out, const NodeId& node_id) {
+  out << node_id.name;
 
   if (!node_id.port.empty()) {
-    fprintf(fp, ":%s", node_id.port.data());
+    out << ":" << node_id.port;
   }
+  return out;
 }
 
-void PrintProperties(FILE* fp, const std::vector<Property>& properties) {
+std::ostream& operator<<(std::ostream& out, const std::vector<Property>& properties) {
   if (!properties.empty()) {
-    fprintf(fp, "[ ");
+    out << "[ ";
     for (const Property& prop : properties) {
-      fprintf(fp, "%s=\"%s\" ", prop.name.data(), prop.value.data());
+      out << prop.name << "=\"" << prop.value << "\" ";
     }
-    fprintf(fp, "]");
+    out << "]";
   }
+  return out;
 }
 
-void PrintEdge(FILE* fp, const Edge& edge) {
-  PrintNodeId(fp, edge.from);
-  fprintf(fp, " -> ");
-  PrintNodeId(fp, edge.to);
-  PrintProperties(fp, edge.properties);
-  fprintf(fp, ";\n");
+std::ostream& operator<<(std::ostream& out, const Edge& edge) {
+  out << edge.from << " -> " << edge.to << edge.properties << ";\n";
+  return out;
 }
 
-void PrintNode(FILE* fp, const Node& node) {
-  PrintNodeId(fp, node.id);
-  PrintProperties(fp, node.properties);
-  fprintf(fp, ";\n");
+std::ostream& operator<<(std::ostream& out, const Node& node) {
+  out << node.id << node.properties << ";\n";
+  return out;
 }
 
-void Graph::PrintCommonProperties(FILE* fp) const {
+void Graph::PrintCommonProperties(std::ostream& out) const {
   if (!this->graph_props_.empty()) {
-    fprintf(fp, "graph ");
-    PrintProperties(fp, this->graph_props_);
-    fprintf(fp, ";\n");
+    out << "graph " << this->graph_props_ << ";\n";
   }
 
   if (!this->common_edge_props_.empty()) {
-    fprintf(fp, "edge ");
-    PrintProperties(fp, this->common_edge_props_);
-    fprintf(fp, ";\n");
+    out << "edge " << this->common_edge_props_ << ";\n";
   }
 
   if (!this->common_node_props_.empty()) {
-    fprintf(fp, "node ");
-    PrintProperties(fp, this->common_node_props_);
-    fprintf(fp, ";\n");
+    out << "node " << this->common_node_props_ << ";\n";
   }
 }
 
-void Graph::RenderDot(FILE* fp) const {
-  fprintf(fp, "digraph %s {\n", this->graph_name_.data());
+void Graph::RenderDot(std::ostream& out) const {
+  out << "digraph " << this->graph_name_ << " {\n";
 
-  PrintCommonProperties(fp);
+  PrintCommonProperties(out);
 
   for (const Node& node : this->nodes_) {
-    PrintNode(fp, node);
+    out << node;
   }
 
   for (const Edge& edge : this->edges_) {
-    PrintEdge(fp, edge);
+    out << edge;
   }
 
-  fprintf(fp, "}\n");
+  out << "}";
 }
 
 } // namespace gvl
