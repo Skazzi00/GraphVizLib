@@ -40,6 +40,7 @@ struct Node {
 
 /*!
  * A class describing the structure of the desired graph for output through GraphViz.
+ * All Strings should be alive when RenderDot will be called. Temporary strings are not allowed.
  */
 class Graph {
  public:
@@ -65,7 +66,7 @@ class Graph {
 
   /*!
    * Add a new node to the list of nodes with default properties
-   * @param node name and port
+   * @param node name and port.
    */
   void AddNode(const NodeId& node) {
     const std::vector<Property> default_node_properties = {{"label", node.name}};
